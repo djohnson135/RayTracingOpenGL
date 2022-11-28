@@ -10,6 +10,24 @@ Camera::~Camera()
 {
 }
 
+glm::vec3 Camera::ComputeRayColor(glm::vec3 ray, float t0, float t1, Scene* scene) {
+	float rec;
+	glm::vec3 color(0.0f, 0.0f, 0.0f);
+	if (scene->hit(ray, t0, t1, rec)) {
+		
+		//color = ambient 
+		
+		std::vector<Light*> lights = scene->getLights();
+		for (auto *light: lights) {
+			//color = color + diffuse & specular kd & ks
+			//color of each light?
+			//light->color
+		}
+	}
+	return color;
+
+}
+
 Camera::Camera(int widthRes, int heightRes)
 {
 	this->eye = glm::vec3(0.0f, 0.0f, 7.0f);
@@ -48,14 +66,11 @@ void Camera::TakePicture(Scene *scene)
 
 			//glm::vec3 Pc = origin
 			//Pc = O + Pw(i + 0.5)*u + Pw(j + 0.5) * v;
+			float t0 = 0.0f;
+			float t1 = FLT_MAX;
+			glm::vec3 color = ComputeRayColor(origin, t0, t1, scene);
 
-			//Recursive function to return color of array
-			//shape
-			//light
-			
-
-
-			//renderedImage[j][i] = float color returned color of pixel
+			//renderedImage[i][j] = float color returned color of pixel
 
 		}
 	}

@@ -12,6 +12,6 @@ Sphere::~Sphere()
 {
 }
 
-void Sphere::intersect() {}
+glm::vec3 Sphere::intersect() {}
 
 void Sphere::getNormal() {}

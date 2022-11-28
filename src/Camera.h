@@ -2,7 +2,7 @@
 #include <vector>
 #include "Scene.h"
 #include <glm/glm.hpp>
-
+//#include <limits>
 //#include <GL/glew.h>
 //#include <GLFW/glfw3.h>
 //#include <glm/glm.hpp>
@@ -26,6 +26,7 @@ public:
 
 	void TakePicture(Scene *scene);
 	float* GetRenderedImage() { return renderedImage; };
+	glm::vec3 ComputeRayColor(glm::vec3 ray, float t0, float t1, Scene* scene);
 
 private:
 

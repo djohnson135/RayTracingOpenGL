@@ -13,7 +13,7 @@ Plane::~Plane()
 {
 }
 
-void Plane::intersect(){}
+glm::vec3 Plane::intersect(){}
 
 void Plane::getNormal() {}
 

@@ -91,3 +91,10 @@ Scene::Scene()
 
 
 }
+
+bool Scene::hit(glm::vec3 ray, float t0, float t1, float rec) 
+{
+	for (auto* shape : this->shapes) {
+		glm::vec3 t = shape->intersect(ray, t0, t1);
+	}
+}
