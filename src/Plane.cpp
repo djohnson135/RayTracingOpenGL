@@ -13,3 +13,7 @@ Plane::~Plane()
 {
 }
 
+void Plane::intersect(){}
+
+void Plane::getNormal() {}
+

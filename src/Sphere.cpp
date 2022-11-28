@@ -12,3 +12,6 @@ Sphere::~Sphere()
 {
 }
 
+void Sphere::intersect() {}
+
+void Sphere::getNormal() {}
