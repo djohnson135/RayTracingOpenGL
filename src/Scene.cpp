@@ -77,30 +77,31 @@ Scene::Scene()
 		0.0f //n
 	);
 
-	Plane* plane2 = new Plane(
-		glm::vec3(0.0f, 0.0f, -3.0f), //center
-		glm::vec3(0.0f, 0.0f, 1.0f), //normal
-		glm::vec3(0.1f, 0.1f, 0.1f), //ka
-		glm::vec3(1.0f, 1.0f, 1.0f), //kd
-		glm::vec3(0.0f, 0.0f, 0.0f), //ks
-		glm::vec3(0.0f, 0.0f, 0.0f), //km
-		0.0f //n
-	);
+	//Plane* plane2 = new Plane(
+	//	glm::vec3(0.0f, 0.0f, -3.0f), //center
+	//	glm::vec3(0.0f, 0.0f, 1.0f), //normal
+	//	glm::vec3(0.1f, 0.1f, 0.1f), //ka
+	//	glm::vec3(1.0f, 1.0f, 1.0f), //kd
+	//	glm::vec3(0.0f, 0.0f, 0.0f), //ks
+	//	glm::vec3(0.0f, 0.0f, 0.0f), //km
+	//	0.0f //n
+	//);
 
-	this->shapes.push_back(plane1);
-	this->shapes.push_back(plane2);
+	this->shapes.push_back(plane1); 
+	//this->shapes.push_back(plane2); //covers entire scene
 
 
 }
 
-bool Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Shape* rec) 
+float Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, std::vector<Shape*> & rec)
 {
 	float t = FLT_MAX;
 	for (Shape* shape: this->shapes) {
 		float newt = shape->intersect(origin, ray, t0, t1);
 		if (newt < t) {
 			t = newt;
-			rec = shape;
+			rec.clear();
+			rec.push_back(shape);
 		}
 	}
 	//for (int i = 0; i < this->shapes.size(); i++) {
@@ -109,6 +110,6 @@ bool Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Shape* rec)
 	//}
 	//if (t > 0) return true;
 
-	if (t == FLT_MAX) return false;
-	else return true;
+	//hit is false if eauls FLT_MAX
+	return t;
 }

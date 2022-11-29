@@ -20,3 +20,19 @@ Shape::~Shape(void)
 {
 }
 
+glm::vec3 Shape::getKa() {
+	return this->ka;
+}
+glm::vec3 Shape::getKd() {
+	return this->kd;
+}
+glm::vec3 Shape::getKs() {
+	return this->ks;
+}
+glm::vec3 Shape::getKm() {
+	return this->km;
+}
+float Shape::getN() {
+	return this->n;
+}
+
