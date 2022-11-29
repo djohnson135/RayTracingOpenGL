@@ -13,9 +13,9 @@ Plane::~Plane()
 {
 }
 
-glm::vec3 Plane::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1)
+float Plane::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1)
 {
-	return glm::vec3();
+	return FLT_MAX;
 }
 
 void Plane::getNormal() {}

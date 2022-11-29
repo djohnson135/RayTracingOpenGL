@@ -95,13 +95,20 @@ Scene::Scene()
 
 bool Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Shape* rec) 
 {
-
+	float t = FLT_MAX;
 	for (Shape* shape: this->shapes) {
-		glm::vec3 t = shape->intersect(origin, ray, t0, t1);
+		float newt = shape->intersect(origin, ray, t0, t1);
+		if (newt < t) {
+			t = newt;
+			rec = shape;
+		}
 	}
 	//for (int i = 0; i < this->shapes.size(); i++) {
 	//	//Shape* shape = &shapes.at(i);
 	//	glm::vec3 t = this->shapes[i]->intersect(origin, ray, t0, t1);
 	//}
-	return true;
+	//if (t > 0) return true;
+
+	if (t == FLT_MAX) return false;
+	else return true;
 }

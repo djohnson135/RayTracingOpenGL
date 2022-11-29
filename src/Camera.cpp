@@ -23,7 +23,7 @@ glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, flo
 	if (scene->hit(origin, ray, t0, t1, &rec)) {
 		
 		//color = ambient 
-		
+		color = glm::vec3(1.0f, 1.0f, 1.0f);
 		std::vector<Light*> lights = scene->getLights();
 		for (auto *light: lights) {
 			//color = color + diffuse & specular kd & ks
@@ -60,6 +60,7 @@ void Camera::TakePicture(Scene *scene)
 	glm::vec3 w = normalize(a);
 	glm::vec3 u = glm::normalize(glm::cross(this->up, w));
 	glm::vec3 v = glm::cross(w, u);
+	//float colorbuff[heightRes][widthRes][3];
 
 	for (int i = 0; i < this->heightRes; i++) {
 		for (int j = 0; j < this->widthRes; j++) {
@@ -98,9 +99,13 @@ void Camera::TakePicture(Scene *scene)
 			glm::vec3 color = ComputeRayColor(origin, ray, t0, t1, scene);
 
 
-
+			
 
 			//renderedImage[i][j] = float color returned color of pixel
+			renderedImage[i * widthRes * 3 + j * 3 + 0] = color.x;
+			renderedImage[i * widthRes * 3 + j * 3 + 1] = color.y;
+			renderedImage[i * widthRes * 3 + j * 3 + 2] = color.z;
+
 
 		}
 	}
