@@ -1,6 +1,13 @@
 #include "Camera.h"
 
-
+//struct Record {
+//	glm::vec3 ka;
+//	glm::vec3 ks;
+//	glm::vec3 km;
+//	glm::vec3 kd;
+//	float n;
+//	Record(glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, glm::vec3 km, float n) : ka(ka), kd(kd), ks(ks), km(km), n(n) {}
+//};
 
 Camera::Camera()
 {
@@ -10,10 +17,10 @@ Camera::~Camera()
 {
 }
 
-glm::vec3 Camera::ComputeRayColor(glm::vec3 ray, float t0, float t1, Scene* scene) {
-	float rec;
+glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Scene* scene) {
+	Shape rec(glm::vec3(0.0f,0.0f,0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f);
 	glm::vec3 color(0.0f, 0.0f, 0.0f);
-	if (scene->hit(ray, t0, t1, rec)) {
+	if (scene->hit(origin, ray, t0, t1, &rec)) {
 		
 		//color = ambient 
 		
@@ -48,27 +55,50 @@ void Camera::TakePicture(Scene *scene)
 	glm::vec3 origin;
 	std::vector<Light*> lights = scene->getLights();
 	std::vector<Shape*> shapes = scene->getShapes();
-	float focaldistance = sqrt(pow((lookat.x - eye.x), 2) + pow((lookat.y - eye.y), 2) + pow((lookat.z - eye.z), 2));
-	for (int i = 0; i < heightRes; i++) {
-		for (int j = 0; j < widthRes; j++) {
+
+	glm::vec3 a = this->eye - this->lookat;
+	glm::vec3 w = normalize(a);
+	glm::vec3 u = glm::normalize(glm::cross(this->up, w));
+	glm::vec3 v = glm::cross(w, u);
+
+	for (int i = 0; i < this->heightRes; i++) {
+		for (int j = 0; j < this->widthRes; j++) {
 
 			//calculate primary ray
 			
-			float ly = 2 * focalDistance * tan((float) this->FovY / 2.0);
-			float lx = ly * widthRes / heightRes;
+			float ly = 2 * this->focalDistance * tan((float) this->FovY / 2.0);
+			float lx = ly * this->widthRes / this->heightRes;
 			float Pw = ly / heightRes;
 
 
-			origin = glm::normalize(lookat - eye) * (float) focalDistance;
-			origin.x = origin.x - lx / 2.0 * j;
-			origin.y = origin.y - ly / 2.0 * i;
-			origin = origin + eye;
+			origin = (glm::normalize(lookat - eye) * (float) this->focalDistance) - (lx/2.0f) * u - (ly/2.0f) * v + eye;
 
 			//glm::vec3 Pc = origin
 			//Pc = O + Pw(i + 0.5)*u + Pw(j + 0.5) * v;
+			glm::vec3 Pc = origin + Pw * (j+0.5f) * u + Pw * (i + 0.5f) * v;
+
 			float t0 = 0.0f;
 			float t1 = FLT_MAX;
-			glm::vec3 color = ComputeRayColor(origin, t0, t1, scene);
+
+			glm::vec3 ray = glm::normalize(Pc - this->eye); //direction
+
+			//ray = Pc - eye =direction
+			//origin = eye or PC
+			// origin gets changed to new intersection point
+			// direction becomes reflection
+			// shadow ray is direction towards light
+			//t0 = Pc
+
+			//plane normal is given
+			//sphere reflection is ray - x
+
+			//
+
+			origin = eye;
+			glm::vec3 color = ComputeRayColor(origin, ray, t0, t1, scene);
+
+
+
 
 			//renderedImage[i][j] = float color returned color of pixel
 

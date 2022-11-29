@@ -19,6 +19,7 @@ Scene::Scene()
 
 	this->lights.push_back(&light1);
 	this->lights.push_back(&light2);
+	//Shape* bpt;
 
 	Sphere sphere1(
 		glm::vec3(-1.0f, -0.7f, 3.0f), //position
@@ -92,9 +93,15 @@ Scene::Scene()
 
 }
 
-bool Scene::hit(glm::vec3 ray, float t0, float t1, float rec) 
+bool Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Shape* rec) 
 {
-	for (auto* shape : this->shapes) {
-		glm::vec3 t = shape->intersect(ray, t0, t1);
+
+	for (Shape* shape: this->shapes) {
+		glm::vec3 t = shape->intersect(origin, ray, t0, t1);
 	}
+	//for (int i = 0; i < this->shapes.size(); i++) {
+	//	//Shape* shape = &shapes.at(i);
+	//	glm::vec3 t = this->shapes[i]->intersect(origin, ray, t0, t1);
+	//}
+	return true;
 }

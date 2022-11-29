@@ -12,6 +12,9 @@ Sphere::~Sphere()
 {
 }
 
-glm::vec3 Sphere::intersect() {}
+glm::vec3 Sphere::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1)
+{
+	return glm::vec3();
+}
 
 void Sphere::getNormal() {}
