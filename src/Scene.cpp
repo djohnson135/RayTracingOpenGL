@@ -19,7 +19,7 @@ Scene::Scene()
 
 	this->lights.push_back(light1);
 	this->lights.push_back(light2);
-	//Shape* bpt;
+
 
 	Sphere* sphere1 = new Sphere(
 		glm::vec3(-1.0f, -0.7f, 3.0f), //position
@@ -91,6 +91,21 @@ Scene::Scene()
 	this->shapes.push_back(plane2); //covers entire scene
 
 
+}
+
+Scene::Scene(bool isBunny) {
+	Light* light1 = new Light(
+		glm::vec3(0.0f, 3.0f, -2.0f), //position
+		glm::vec3(0.2f, 0.2f, 0.2f)	  //color
+	);
+
+	Light* light2 = new Light(
+		glm::vec3(-2.0f, 1.0f, 4.0f), //position
+		glm::vec3(0.5f, 0.5f, 0.5f)	  //color
+	);
+
+	this->lights.push_back(light1);
+	this->lights.push_back(light2);
 }
 
 float Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, std::vector<Shape*> & rec)
