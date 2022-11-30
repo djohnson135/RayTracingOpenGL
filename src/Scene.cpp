@@ -104,12 +104,5 @@ float Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, std::vecto
 			rec.push_back(shape);
 		}
 	}
-	//for (int i = 0; i < this->shapes.size(); i++) {
-	//	//Shape* shape = &shapes.at(i);
-	//	glm::vec3 t = this->shapes[i]->intersect(origin, ray, t0, t1);
-	//}
-	//if (t > 0) return true;
-
-	//hit is false if eauls FLT_MAX
 	return t;
 }

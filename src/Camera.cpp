@@ -20,13 +20,14 @@ Camera::~Camera()
 
 glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Scene* scene) {
 	std::vector<Shape*> rec;
+	std::vector<Shape*> srec;
 	glm::vec3 color(0.0f, 0.0f, 0.0f);
 	float t = scene->hit(origin, ray, t0, t1, rec);
 	if (t != FLT_MAX) { //ray has hit an object
 		
 		//color = ambient 
 		//color = glm::vec3(1.0f, 1.0f, 1.0f);
-		color = glm::vec3(0.0f, 0.0f, 0.0f);
+		color = rec[0]->getKa();
 
 		std::vector<Light*> lights = scene->getLights();
 		glm::vec3 intersection = origin + t * ray;
@@ -37,28 +38,22 @@ glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, flo
 		glm::vec3 E = glm::normalize(this->eye - intersection);
 
 		for (auto* light : lights) {
+
 			glm::vec3 lightPosition = light->getPosition();
 			glm::vec3 lightColor = light->getColor();
-			glm::vec3 L = glm::normalize(lightPosition - intersection);
-			glm::vec3 R = glm::normalize(2 * (dot(L, normal)) * normal - L);
-			color += lightColor * ((rec[0]->getKd() * std::max(0.0f, dot(L, normal))) + (rec[0]->getKs() * pow(std::max(0.0f, glm::dot(R, E)), rec[0]->getN())));
+			//calculate shadow ray
+			glm::vec3 shadowOrigin = intersection;
+			glm::vec3 shadowRay = glm::normalize(lightPosition - intersection);
+			if (scene->hit(shadowOrigin, shadowRay, FLT_MIN, glm::dot(lightPosition - shadowOrigin, shadowRay), srec) == FLT_MAX) {
+				glm::vec3 L = glm::normalize(lightPosition - intersection);
+				glm::vec3 R = glm::normalize(2 * (dot(L, normal)) * normal - L);
+				color += lightColor * ((rec[0]->getKd() * std::max(0.0f, dot(L, normal))) + (rec[0]->getKs() * pow(std::max(0.0f, glm::dot(R, E)), rec[0]->getN())));
+			}
+			
+
 		}
-		color = rec[0]->getKa() + color;
-		/*vec3 normal = normalize(N);
+		//color = rec[0]->getKa() + color;
 
-		vec3 E = normalize(eye - pos3d);
-		vec3 I = vec3(0.0f, 0.0f, 0.0f);
-
-		for (int i = 0; i < NUM_LIGHTS; i++) {
-			vec3 L = normalize(lights[i].position - pos3d);
-			vec3 R = normalize(2 * (dot(L, normal)) * normal - L);
-			I += lights[i].color * ((kd * max(0, dot(L, normal))) + (ks * pow(max(0, dot(R, E)), s)));
-		}
-		I = ka + I;
-		gl_FragColor = vec4(I, 1.0f);*/
-
-
-		
 	}
 	return color;
 
