@@ -91,21 +91,17 @@ bool LoadModel(char* name, std::vector<glm::vec3>& vertices, std::vector<glm::ve
 	return true;
 }
 
-//void CreateTriangleVector(std::vector<glm::vec3>& vertices, std::vector<glm::vec2>& texCoords)
-//{
-//	for (int i = 0; i < vertices.size() / 3; i++)
-//	{
-//		Triangle myTriangle;
-//
-//		if (texCoords.empty())
-//			myTriangle = Triangle(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2]);
-//		else
-//			myTriangle = Triangle(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2],
-//				texCoords[i * 3 + 0], texCoords[i * 3 + 1], texCoords[i * 3 + 2]);
-//
-//		triangleVector.push_back(myTriangle);
-//	}
-//}
+void CreateTriangleVector(std::vector<glm::vec3>& vertices)
+{
+	for (int i = 0; i < vertices.size() / 3; i++)
+	{
+		Triangle myTriangle;
+
+		if (texCoords.empty())
+			myTriangle = Triangle(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2]);
+		triangleVector.push_back(myTriangle);
+	}
+}
 
 
 void Init()
@@ -149,7 +145,7 @@ void Init()
 	else {
 		LoadModel("../obj/bunny.obj", vertices, texCoords);
 		scene = Scene(true);
-		//CreateTriangleVector(vertices, texCoords);
+		CreateTriangleVector(vertices);
 	}
 	
 	
