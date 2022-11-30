@@ -1,5 +1,5 @@
 #include "Sphere.h"
-
+#include <iostream>
 //Sphere::Sphere()
 //{
 //}
@@ -15,63 +15,38 @@ Sphere::~Sphere()
 float Sphere::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1)
 {
 
-	//return glm::vec3();
-	//t = (-bq +/- sqrt(bq^2 - 4aq*cq)) / 2aq
-
 	float aq = dot(ray, ray);
 	float bq = dot(ray * 2.0f, origin - this->position);
 	float cq = dot(origin - this->position, origin - this->position) - pow(this->radius,2);
 
-	//quadratic formula
-	//check if pow(bq, 2) - 4 * aq * cq) is negative
+
 	float sqrtDeterminant = pow(bq, 2) - 4 * aq * cq;
-	float tval;
-	if (sqrtDeterminant < 0) return FLT_MAX; //no intersection; //no solution
 
-	else if (sqrtDeterminant == 0) {
-		float tpos = (-bq + sqrt(sqrtDeterminant)) / (2 * aq);
+	
+	if (sqrtDeterminant < 0) return -1; //no intersection; //no solution
+	
+	float tpos = (-bq + sqrt(sqrtDeterminant)) / (2 * aq);
+	float tneg = (-bq - sqrt(sqrtDeterminant)) / (2 * aq);
 
-		float tneg = (-bq - sqrt(sqrtDeterminant)) / (2 * aq);
 
-		if (tpos < t0 || tpos > t1) {
-			return FLT_MAX; //no intersection
-		}
-		tval = tpos;
-	}
-	else {
-		float tpos = (-bq + sqrt(sqrtDeterminant)) / (2 * aq);
 
-		float tneg = (-bq - sqrt(sqrtDeterminant)) / (2 * aq);
+	if (tpos > t0 && tpos < t1 && tneg > t0 && tneg < t1) {
+		//both are valid
+		return std::min(tpos, tneg);
 		
-		if (tpos < 0 && tneg < 0) {
-			return FLT_MAX; //no intersection;
-		}
-		else if (tpos < 0) {
-			tval = tneg;
-		}
-		else if (tneg < 0) {
-			tval = tpos;
-		}
-		else {
-			//find min of tpos and tneg
-			if (tpos < tneg) {
-				tval = tneg;
-			}
-			else {
-				tval = tpos;
-			}
-		}
+	}
+	//if just tpos is valid
+	if (tpos > t0 && tpos < t1 && (tneg < t0 || tneg > t1)) {
+		return tpos;
 	}
 
+	//if just tneg is valid
+	if (tneg > t0 && tneg < t1 && (tpos < t0 || tpos > t1)) {
+		return tneg;
+	}
+
+	return -1;
 	
-
-	//2 cases
-	
-	//check if t >t0 and return smallest t
-	//glm::vec3 intersection = origin + tval * ray;
-
-	return tval;
-
 }
 
 glm::vec3 Sphere::getNormal(glm::vec3 intersection)
