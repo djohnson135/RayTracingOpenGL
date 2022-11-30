@@ -18,7 +18,12 @@ Camera::~Camera()
 {
 }
 
-glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Scene* scene) {
+glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Scene* scene, int iter) {
+	
+	if (iter == 4) {
+		return glm::vec3(0.0f, 0.0f, 0.0f);
+	}
+	
 	std::vector<Shape*> rec;
 	std::vector<Shape*> srec;
 	glm::vec3 color(0.0f, 0.0f, 0.0f);
@@ -44,16 +49,13 @@ glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, flo
 			//calculate shadow ray
 			glm::vec3 shadowOrigin = intersection;
 			glm::vec3 shadowRay = glm::normalize(lightPosition - intersection);
-			if (scene->hit(shadowOrigin, shadowRay, FLT_MIN, glm::dot(lightPosition - shadowOrigin, shadowRay), srec) == FLT_MAX) {
+			if (scene->hit(shadowOrigin, shadowRay, 0.0001, glm::dot(lightPosition - shadowOrigin, shadowRay), srec) == FLT_MAX) {
 				glm::vec3 L = glm::normalize(lightPosition - intersection);
 				glm::vec3 R = glm::normalize(2 * (dot(L, normal)) * normal - L);
 				color += lightColor * ((rec[0]->getKd() * std::max(0.0f, dot(L, normal))) + (rec[0]->getKs() * pow(std::max(0.0f, glm::dot(R, E)), rec[0]->getN())));
 			}
-			
-
 		}
-		//color = rec[0]->getKa() + color;
-
+		//return color + rec[0]->getKm() * ComputeRayColor();
 	}
 	return color;
 
@@ -120,7 +122,7 @@ void Camera::TakePicture(Scene *scene)
 			//
 
 			origin = eye;
-			glm::vec3 color = ComputeRayColor(origin, ray, t0, t1, scene);
+			glm::vec3 color = ComputeRayColor(origin, ray, t0, t1, scene, 0);
 
 
 			

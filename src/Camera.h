@@ -26,7 +26,7 @@ public:
 
 	void TakePicture(Scene *scene);
 	float* GetRenderedImage() { return renderedImage; };
-	glm::vec3 ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Scene* scene);
+	glm::vec3 ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, float t1, Scene* scene, int iter);
 
 private:
 
