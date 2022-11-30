@@ -34,7 +34,7 @@ glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, flo
 		//shader phong
 
 		glm::vec3 normal = rec[0]->getNormal(intersection);
-		glm::vec3 E = normalize(origin - intersection);
+		glm::vec3 E = normalize(this->eye - intersection);
 
 		for (auto* light : lights) {
 			glm::vec3 lightPosition = light->getPosition();

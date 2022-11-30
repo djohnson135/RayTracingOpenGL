@@ -7,18 +7,18 @@ Scene::~Scene()
 
 Scene::Scene()
 {
-	Light light1( 
+	Light* light1 = new Light( 
 		glm::vec3(0.0f, 3.0f, -2.0f), //position
 		glm::vec3(0.2f,0.2f,0.2f)	  //color
 	);
 
-	Light light2(
+	Light* light2 = new Light(
 		glm::vec3(-2.0f, 1.0f, 4.0f), //position
 		glm::vec3(0.5f, 0.5f, 0.5f)	  //color
 	);
 
-	this->lights.push_back(&light1);
-	this->lights.push_back(&light2);
+	this->lights.push_back(light1);
+	this->lights.push_back(light2);
 	//Shape* bpt;
 
 	Sphere* sphere1 = new Sphere(
@@ -77,18 +77,18 @@ Scene::Scene()
 		0.0f //n
 	);
 
-	//Plane* plane2 = new Plane(
-	//	glm::vec3(0.0f, 0.0f, -3.0f), //center
-	//	glm::vec3(0.0f, 0.0f, 1.0f), //normal
-	//	glm::vec3(0.1f, 0.1f, 0.1f), //ka
-	//	glm::vec3(1.0f, 1.0f, 1.0f), //kd
-	//	glm::vec3(0.0f, 0.0f, 0.0f), //ks
-	//	glm::vec3(0.0f, 0.0f, 0.0f), //km
-	//	0.0f //n
-	//);
+	Plane* plane2 = new Plane(
+		glm::vec3(0.0f, 0.0f, -3.0f), //center
+		glm::vec3(0.0f, 0.0f, 1.0f), //normal
+		glm::vec3(0.1f, 0.1f, 0.1f), //ka
+		glm::vec3(1.0f, 1.0f, 1.0f), //kd
+		glm::vec3(0.0f, 0.0f, 0.0f), //ks
+		glm::vec3(0.0f, 0.0f, 0.0f), //km
+		0.0f //n
+	);
 
 	this->shapes.push_back(plane1); 
-	//this->shapes.push_back(plane2); //covers entire scene
+	this->shapes.push_back(plane2); //covers entire scene
 
 
 }
