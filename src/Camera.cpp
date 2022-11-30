@@ -55,7 +55,9 @@ glm::vec3 Camera::ComputeRayColor(glm::vec3 origin, glm::vec3 ray, float t0, flo
 				color += lightColor * ((rec[0]->getKd() * std::max(0.0f, dot(L, normal))) + (rec[0]->getKs() * pow(std::max(0.0f, glm::dot(R, E)), rec[0]->getN())));
 			}
 		}
-		//return color + rec[0]->getKm() * ComputeRayColor();
+		//reflected ray
+		glm::vec3 reflectedRay = ray - 2.0f * normal * glm::dot(ray, normal);
+		return color + rec[0]->getKm() * ComputeRayColor(intersection, reflectedRay, 0.0001, FLT_MAX, scene, ++iter);
 	}
 	return color;
 

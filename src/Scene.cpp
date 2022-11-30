@@ -63,8 +63,8 @@ Scene::Scene()
 
 	this->shapes.push_back(sphere1);
 	this->shapes.push_back(sphere2);
-	//this->shapes.push_back(sphere3);
-	//this->shapes.push_back(sphere4);
+	this->shapes.push_back(sphere3);
+	this->shapes.push_back(sphere4);
 
 
 	Plane* plane1 = new Plane(
