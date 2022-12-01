@@ -49,7 +49,7 @@ float Sphere::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1)
 	
 }
 
-glm::vec3 Sphere::getNormal(glm::vec3 intersection)
+glm::vec3 Sphere::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection)
 {
 	//normalize (P-C)
 	return glm::normalize(intersection - this->position);

@@ -38,7 +38,7 @@ public:
 	Triangle(glm::vec3& v0, glm::vec3& v1, glm::vec3& v2, glm::vec3& n0, glm::vec3& n1, glm::vec3& n2, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, glm::vec3 km, float n);
 	Baycentric baycentricCoordinate(float xPos, float yPos, glm::vec3 A, glm::vec3 B, glm::vec3 C);
 	float intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1);
-	glm::vec3 getNormal(glm::vec3 intersection);
+	glm::vec3 getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection);
 
 
 private:

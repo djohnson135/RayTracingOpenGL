@@ -11,7 +11,7 @@ float Shape::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1)
 {
 	return FLT_MAX;
 }
-glm::vec3 Shape::getNormal(glm::vec3 intersection)
+glm::vec3 Shape::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection)
 {
 	return glm::vec3();
 }
