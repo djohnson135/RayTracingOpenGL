@@ -22,10 +22,10 @@ std::vector<Light*> lights;
 bool isSceneBunny = false;
 	
 std::vector<glm::vec3> vertices;
-std::vector<glm::vec2> texCoords;
+std::vector<glm::vec3> normals;
 
-std::vector<Triangle> triangleVector;
-
+//std::vector<Triangle> triangleVector;
+std::vector<Shape*> triangleShapes;
 
 void ClearFrameBuffer()
 {
@@ -48,7 +48,7 @@ void CharacterCallback(GLFWwindow* lWindow, unsigned int key) {
 	}
 }
 
-bool LoadModel(char* name, std::vector<glm::vec3>& vertices, std::vector<glm::vec2>& texCoords)
+bool LoadModel(char* name, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals)
 {
 	// Taken from Shinjiro Sueda with slight modification
 	std::string meshName(name);
@@ -79,9 +79,10 @@ bool LoadModel(char* name, std::vector<glm::vec3>& vertices, std::vector<glm::ve
 					vertices.push_back(glm::vec3(attrib.vertices[3 * idx.vertex_index + 0],
 						attrib.vertices[3 * idx.vertex_index + 1],
 						attrib.vertices[3 * idx.vertex_index + 2]));
-					if (!attrib.texcoords.empty()) {
-						texCoords.push_back(glm::vec2(attrib.texcoords[2 * idx.texcoord_index + 0],
-							attrib.texcoords[2 * idx.texcoord_index + 1]));
+					if (!attrib.normals.empty()) {
+						normals.push_back(glm::vec3(attrib.normals[3 * idx.normal_index + 0],
+							attrib.normals[3 * idx.normal_index + 1],
+							attrib.normals[3 * idx.normal_index + 2]));
 					}
 				}
 				index_offset += fv;
@@ -91,16 +92,22 @@ bool LoadModel(char* name, std::vector<glm::vec3>& vertices, std::vector<glm::ve
 	return true;
 }
 
-void CreateTriangleVector(std::vector<glm::vec3>& vertices)
+void CreateTriangleVector(std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals)
 {
+	glm::vec3 ka = glm::vec3(0.1f, 0.1f, 0.1f);
+	glm::vec3 kd = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 ks = glm::vec3(1.0f, 1.0f, 0.5f);
+	glm::vec3 km = glm::vec3(0.0f, 0.0f, 0.0f);
+	float n = 100.0f;
+	
 	for (int i = 0; i < vertices.size() / 3; i++)
 	{
-		Triangle myTriangle;
-
-		if (texCoords.empty())
-			myTriangle = Triangle(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2]);
-		triangleVector.push_back(myTriangle);
+		
+		Triangle * myTriangle = new Triangle(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2], ka, kd, ks, km, n);
+		triangleShapes.push_back(myTriangle);
+		
 	}
+	
 }
 
 
@@ -143,9 +150,10 @@ void Init()
 		scene = Scene();
 	}
 	else {
-		LoadModel("../obj/bunny.obj", vertices, texCoords);
-		scene = Scene(true);
-		CreateTriangleVector(vertices);
+		LoadModel("../obj/bunny.obj", vertices, normals);
+		CreateTriangleVector(vertices, normals);
+		scene = Scene(triangleShapes);
+		
 	}
 	
 	

@@ -93,7 +93,7 @@ Scene::Scene()
 
 }
 
-Scene::Scene(bool isBunny) {
+Scene::Scene(std::vector<Shape*> triangleShapes) {
 	Light* light1 = new Light(
 		glm::vec3(0.0f, 3.0f, -2.0f), //position
 		glm::vec3(0.2f, 0.2f, 0.2f)	  //color
@@ -106,6 +106,8 @@ Scene::Scene(bool isBunny) {
 
 	this->lights.push_back(light1);
 	this->lights.push_back(light2);
+
+	this->shapes = triangleShapes;
 }
 
 float Scene::hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, std::vector<Shape*> & rec)
