@@ -93,6 +93,20 @@ Scene::Scene()
 
 
 }
+Scene::Scene(std::vector<Shape*> shapes) {
+	Light* light1 = new Light(
+		glm::vec3(0.0f, 3.0f, -2.0f), //position
+		glm::vec3(0.2f, 0.2f, 0.2f)	  //color
+	);
+
+	Light* light2 = new Light(
+		glm::vec3(-2.0f, 1.0f, 4.0f), //position
+		glm::vec3(0.5f, 0.5f, 0.5f)	  //color
+	);
+	this->lights.push_back(light1);
+	this->lights.push_back(light2);
+	this->shapes = shapes;
+}
 
 Scene::Scene(BCH* box) {
 	Light* light1 = new Light(

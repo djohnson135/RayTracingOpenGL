@@ -26,6 +26,8 @@ std::vector<glm::vec3> normals;
 
 //std::vector<Triangle> triangleVector;
 std::vector<Triangle*> triangleShapes;
+std::vector<Shape*> ShapeTesting;
+
 
 void ClearFrameBuffer()
 {
@@ -105,7 +107,7 @@ void CreateTriangleVector(std::vector<glm::vec3>& vertices, std::vector<glm::vec
 		
 		Triangle * myTriangle = new Triangle(vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2], ka, kd, ks, km, n);
 		triangleShapes.push_back(myTriangle);
-		
+		ShapeTesting.push_back(myTriangle);
 	}
 	
 }
@@ -161,8 +163,8 @@ void Init()
 		//BCH * boundingBox = new BCH
 		BCH* boundingBox = new BCH(triangleShapes, ka, kd, ks, km, n);
 
-
-		scene = Scene(boundingBox);
+		scene = Scene(ShapeTesting);
+		//scene = Scene(boundingBox);
 		//scene = Scene()
 	}
 	
