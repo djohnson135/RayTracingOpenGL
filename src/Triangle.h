@@ -50,4 +50,7 @@ public:
 private:
 	glm::vec3 v[3];		// Triangle vertices
 	glm::vec3 n[3];     //triangle normals
+	float b0;
+	float b1;
+	float b2;
 };

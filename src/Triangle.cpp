@@ -119,6 +119,10 @@ float Triangle::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 
 
 	if (t < t0 || t > t1) return -1;
+	this->b0 = b0;
+	this->b1 = b1;
+	this->b2 = b2;
+
 	return t;
 
 	//b1 b2 1-b1-b2
@@ -128,7 +132,7 @@ glm::vec3 Triangle::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 interse
 	//Baycentric bay = this->baycentricCoordinate(intersection.x, intersection.y, this->v[0], this->v[1], this->v[2]);
 	
 	
-	glm::vec3 E1 = this->v[1] - this->v[0];
+	/*glm::vec3 E1 = this->v[1] - this->v[0];
 	glm::vec3 E2 = this->v[2] - this->v[0];
 
 	glm::vec3 S = origin - v[0];
@@ -139,7 +143,7 @@ glm::vec3 Triangle::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 interse
 
 	float b1 = det * glm::dot(S1, S);
 	float b2 = det * glm::dot(S2, ray);
-	float b0 = 1 - b1 - b2;
+	float b0 = 1 - b1 - b2;*/
 	
 	
 	
@@ -168,6 +172,6 @@ glm::vec3 Triangle::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 interse
 	//B1 is beta B2 is gamma
 	//glm::normalize()
 
-	glm::vec3 normal = this->n[0] * b0 + this->n[1] * b1 + this->n[2] * b2;
+	glm::vec3 normal = this->n[0] * this->b0 + this->n[1] * this->b1 + this->n[2] * this->b2;
 	return glm::normalize(normal);
 }
