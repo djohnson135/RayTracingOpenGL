@@ -25,7 +25,7 @@ std::vector<glm::vec3> vertices;
 std::vector<glm::vec3> normals;
 
 //std::vector<Triangle> triangleVector;
-std::vector<Shape*> triangleShapes;
+std::vector<Triangle*> triangleShapes;
 
 void ClearFrameBuffer()
 {
@@ -150,11 +150,20 @@ void Init()
 		scene = Scene();
 	}
 	else {
+		glm::vec3 ka = glm::vec3(0.1f, 0.1f, 0.1f);
+		glm::vec3 kd = glm::vec3(0.0f, 0.0f, 1.0f);
+		glm::vec3 ks = glm::vec3(1.0f, 1.0f, 0.5f);
+		glm::vec3 km = glm::vec3(0.0f, 0.0f, 0.0f);
+		float n = 100.0f;
+
 		LoadModel("../obj/bunny.obj", vertices, normals);
 		CreateTriangleVector(vertices, normals);
 		//BCH * boundingBox = new BCH
-		scene = Scene(triangleShapes);
-		
+		BCH* boundingBox = new BCH(triangleShapes, ka, kd, ks, km, n);
+
+
+		scene = Scene(boundingBox);
+		//scene = Scene()
 	}
 	
 	

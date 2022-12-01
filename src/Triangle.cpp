@@ -14,31 +14,67 @@ Triangle::Triangle(glm::vec3& v0, glm::vec3& v1, glm::vec3& v2, glm::vec3& n0, g
 
 };
 
-//float Triangle::minX() {
-//	return std::min(this->v[0].x, this->v[1].x, this->v[2].x);
-//}
+float Triangle::minX() {
+	float z0 = v[0].x;
+	float z1 = v[1].x;
+	float z2 = v[2].x;
 
-//float Triangle::minY() {
-//	return std::min(this->v[0].y, this->v[1].y, this->v[2].y);
-//}
-//
-//float Triangle::minZ() {
-//	return std::min(this->v[0].z, this->v[1].z, this->v[2].z);
-//}
-//
-//float Triangle::maxX() {
-//	return std::max(this->v[0].x, this->v[1].x, this->v[2].x);
-//}
-//
-//float Triangle::maxY() {
-//	return std::max(this->v[0].y, this->v[1].y, this->v[2].y);
-//
-//}
-//
-//float Triangle::maxZ() {
-//	return std::max(this->v[0].z, this->v[1].z, this->v[2].z);
-//
-//}
+	if (z0 < z1 && z0 < z2) return z0;
+	else if (z1 < z2) return z1;
+	else return z2;
+}
+
+float Triangle::minY() {
+	float z0 = v[0].y;
+	float z1 = v[1].y;
+	float z2 = v[2].y;
+
+	if (z0 < z1 && z0 < z2) return z0;
+	else if (z1 < z2) return z1;
+	else return z2;
+}
+
+float Triangle::minZ() {
+	float z0 = v[0].z;
+	float z1 = v[1].z;
+	float z2 = v[2].z;
+
+	if (z0 < z1 && z0 < z2) return z0;
+	else if (z1 < z2) return z1;
+	else return z2;
+}
+
+float Triangle::maxX() {
+	float z0 = v[0].x;
+	float z1 = v[1].x;
+	float z2 = v[2].x;
+
+	if (z0 > z1 && z0 > z2) return z0;
+	else if (z1 > z2) return z1;
+	else return z2;
+}
+
+float Triangle::maxY() {
+	float z0 = v[0].y;
+	float z1 = v[1].y;
+	float z2 = v[2].y;
+
+	if (z0 > z1 && z0 > z2) return z0;
+	else if (z1 > z2) return z1;
+	else return z2;
+
+}
+
+float Triangle::maxZ() {
+	float z0 = v[0].z;
+	float z1 = v[1].z;
+	float z2 = v[2].z;
+
+	if (z0 > z1 && z0 > z2) return z0;
+	else if (z1 > z2) return z1;
+	else return z2;
+
+}
 
 Baycentric Triangle::baycentricCoordinate(float xPos, float yPos, glm::vec3 A, glm::vec3 B, glm::vec3 C) {
 
