@@ -9,7 +9,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include "tiny_obj_loader.h"
 #include "Triangle.h"
-
+#include "BCH.h"
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 1200
 
@@ -152,6 +152,7 @@ void Init()
 	else {
 		LoadModel("../obj/bunny.obj", vertices, normals);
 		CreateTriangleVector(vertices, normals);
+		//BCH * boundingBox = new BCH
 		scene = Scene(triangleShapes);
 		
 	}
