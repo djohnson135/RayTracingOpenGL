@@ -94,16 +94,30 @@ float Triangle::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 	
 	
 	
-	glm::vec3 E1 = this->v[1] - this->v[0];
-	glm::vec3 E2 = this->v[2] - this->v[0];
+	glm::vec3 E1 = this->v[1] - this->v[0]; //v0v1
+	glm::vec3 E2 = this->v[2] - this->v[0]; //v0v2
 	
-	glm::vec3 S = origin - v[0];
-	glm::vec3 S1 = glm::cross(ray, E2);
+	glm::vec3 S = origin - v[0]; //tvec
+	glm::vec3 S1 = glm::cross(ray, E2); //pvec
 	glm::vec3 S2 = glm::cross(S, E1);
 	
-	float det = 1 / glm::dot(S1, E1);
+	float det = glm::dot(S1, E1);//det
 
-	float t = det * glm::dot(S2, E2);
+	if (det < t0) return -1;
+
+	float invDet = 1 / det;
+
+	float b1 = invDet * glm::dot(S1, S); 
+	if (b1 < 0 || b1 > 1) return -1;
+
+	float b2 = invDet * glm::dot(S2, ray);
+	if (b2 < 0 || b2 + b1 > 1) return -1;
+
+	float b0 = 1 - b1 - b2;
+
+	float t = invDet * glm::dot(S2, E2);
+
+
 	if (t < t0 || t > t1) return -1;
 	return t;
 

@@ -163,8 +163,8 @@ void Init()
 		//BCH * boundingBox = new BCH
 		BCH* boundingBox = new BCH(triangleShapes, ka, kd, ks, km, n);
 
-		scene = Scene(ShapeTesting);
-		//scene = Scene(boundingBox);
+		//scene = Scene(ShapeTesting);
+		scene = Scene(boundingBox);
 		//scene = Scene()
 	}
 	
