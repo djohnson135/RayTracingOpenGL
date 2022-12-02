@@ -3,6 +3,7 @@
 #include "Shape.h"
 #include "Light.h"
 #include "BCH.h"
+#include "BVH.h"
 //#include <glm/glm.hpp>
 
 class Scene
@@ -11,6 +12,8 @@ public:
 	Scene();
 	~Scene();
 	Scene(BCH* box);
+	Scene(BVH* box);
+
 	Scene(std::vector<Shape*>);
 
 	float hit(glm::vec3 origin, glm::vec3 ray, float t0, float t1, std::vector<Shape*>& rec);

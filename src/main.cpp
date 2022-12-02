@@ -10,6 +10,8 @@
 #include "tiny_obj_loader.h"
 #include "Triangle.h"
 #include "BCH.h"
+#include "BVH.h"
+
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 1200
 
@@ -112,6 +114,18 @@ void CreateTriangleVector(std::vector<glm::vec3>& vertices, std::vector<glm::vec
 	
 }
 
+BVH* createBVH() {
+	glm::vec3 ka = glm::vec3(0.1f, 0.1f, 0.1f);
+	glm::vec3 kd = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 ks = glm::vec3(1.0f, 1.0f, 0.5f);
+	glm::vec3 km = glm::vec3(0.0f, 0.0f, 0.0f);
+	float n = 100.0f;
+
+
+	std::vector<int> triangleLoc;
+
+	return new BVH(triangleShapes, ka, kd, ks, km, n);
+}
 
 void Init()
 {
@@ -133,11 +147,12 @@ void Init()
 
 		std::cout << "Menu to choose scene. Press the corresponding number with the scene you want to see" << std::endl;
 		std::cout << "	1) scene with spheres and planes" << std::endl;
-		std::cout << "	2) scene with bunny" << std::endl;
+		std::cout << "	2) scene with bunny BVH implementation" << std::endl;
+		std::cout << "	3) scene with bunny KD tree implementation" << std::endl;
 
 		std::cin >> number;
 		num = atoi(number.c_str());
-		if (num != 1 && num != 2) {
+		if (num != 1 && num != 2 && num !=3) {
 			std::cout << number << " is an invalid input. Try again" <<std::endl;
 		}
 		else {
@@ -151,7 +166,7 @@ void Init()
 	if (num == 1) {
 		scene = Scene();
 	}
-	else {
+	else if (num == 2) {
 		glm::vec3 ka = glm::vec3(0.1f, 0.1f, 0.1f);
 		glm::vec3 kd = glm::vec3(0.0f, 0.0f, 1.0f);
 		glm::vec3 ks = glm::vec3(1.0f, 1.0f, 0.5f);
@@ -166,6 +181,15 @@ void Init()
 		//scene = Scene(ShapeTesting);
 		scene = Scene(boundingBox);
 		//scene = Scene()
+	}
+	else {
+		//construct the BVH recursively
+		LoadModel("../obj/bunny.obj", vertices, normals);
+		CreateTriangleVector(vertices, normals);
+
+
+
+		scene = Scene(createBVH());
 	}
 	
 	
