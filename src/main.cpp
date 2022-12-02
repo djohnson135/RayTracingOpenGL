@@ -123,6 +123,9 @@ BVH* createBVH() {
 
 
 	std::vector<int> triangleLoc;
+	for (int i = 0; i < triangleShapes.size(); i++) {
+		triangleLoc.push_back(i);
+	}
 
 	return new BVH(triangleShapes, ka, kd, ks, km, n);
 }
