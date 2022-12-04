@@ -130,48 +130,20 @@ float Triangle::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 
 glm::vec3 Triangle::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection) {
 	//Baycentric bay = this->baycentricCoordinate(intersection.x, intersection.y, this->v[0], this->v[1], this->v[2]);
-	
-	
-	/*glm::vec3 E1 = this->v[1] - this->v[0];
-	glm::vec3 E2 = this->v[2] - this->v[0];
-
-	glm::vec3 S = origin - v[0];
-	glm::vec3 S1 = glm::cross(ray, E2);
-	glm::vec3 S2 = glm::cross(S, E1);
-
-	float det = 1 / glm::dot(S1, E1);
-
-	float b1 = det * glm::dot(S1, S);
-	float b2 = det * glm::dot(S2, ray);
-	float b0 = 1 - b1 - b2;*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*glm::vec3 v0v1 = this->v[1] - this->v[0];
-	glm::vec3 v0v2 = this->v[2] - -this->v[0];
-	glm::vec3 point = glm::cross(ray, v0v2);
-	float det = glm::dot(v0v1, point);
-
-	float invDet = 1 / det;
-	glm::vec3 tvec = origin - v[0];
-	float b1 = glm::dot(tvec, point) * invDet;
-
-	glm::vec3 qvec = glm::cross(tvec, v0v1);
-	float b2 = glm::dot(ray, qvec) * invDet;*/
-	
-
-	//normalize(alphaN1 + betaN2 + gammaN3)
-	//including 0 and 1
-	//B1 is beta B2 is gamma
-	//glm::normalize()
 
 	glm::vec3 normal = this->n[0] * this->b0 + this->n[1] * this->b1 + this->n[2] * this->b2;
 	return glm::normalize(normal);
+}
+
+
+float Triangle::averageX() {
+	return (this->v[0].x + this->v[1].x + this->v[2].x) / 3.0;
+}
+float Triangle::averageY() {
+	return (this->v[0].y + this->v[1].y + this->v[2].y) / 3.0;
+
+}
+float Triangle::averageZ() {
+	return (this->v[0].z + this->v[1].z + this->v[2].z) / 3.0;
+
 }

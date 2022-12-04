@@ -4,31 +4,9 @@
 BVH::BVH(std::vector<Triangle*> triangles, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, glm::vec3 km, float n) : Shape(ka, kd, ks, km, n)
 
 {
-	float minXV = FLT_MAX;
-	float minYV = FLT_MAX;
-	float minZV = FLT_MAX;
-
-	float maxXV = 0.0f;
-	float maxYV = 0.0f;
-	float maxZV = 0.0f;
-	for (auto* triangle : triangles) {
-		//Triangle* t = triangle;
-		if (triangle->minX() < minXV) minXV = triangle->minX();
-		if (triangle->minY() < minYV) minYV = triangle->minY();
-		if (triangle->minZ() < minZV) minZV = triangle->minZ();
-
-		if (triangle->maxX() > maxXV) maxXV = triangle->maxX();
-		if (triangle->maxY() > maxYV) maxYV = triangle->maxY();
-		if (triangle->maxZ() > maxZV) maxZV = triangle->maxZ();
-		this->triangles.push_back(triangle);
-	}
-	this->minX = minXV;
-	this->minY = minYV;
-	this->minZ = minZV;
-	this->maxX = maxXV;
-	this->maxY = maxYV;
-	this->maxZ = maxZV;
+	
 	//this->intersectedTriangle = new Triangle();
+	computeBoundingBox(triangles);
 }
 
 
@@ -79,8 +57,31 @@ glm::vec3 BVH::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection
 }
 
 
-void BVH::computeBoundingBox() {
+void BVH::computeBoundingBox(std::vector<Triangle*> triangles) {
+	float minXV = FLT_MAX;
+	float minYV = FLT_MAX;
+	float minZV = FLT_MAX;
 
+	float maxXV = 0.0f;
+	float maxYV = 0.0f;
+	float maxZV = 0.0f;
+	for (auto* triangle : triangles) {
+		//Triangle* t = triangle;
+		if (triangle->minX() < minXV) minXV = triangle->minX();
+		if (triangle->minY() < minYV) minYV = triangle->minY();
+		if (triangle->minZ() < minZV) minZV = triangle->minZ();
+
+		if (triangle->maxX() > maxXV) maxXV = triangle->maxX();
+		if (triangle->maxY() > maxYV) maxYV = triangle->maxY();
+		if (triangle->maxZ() > maxZV) maxZV = triangle->maxZ();
+		this->triangles.push_back(triangle);
+	}
+	this->minX = minXV;
+	this->minY = minYV;
+	this->minZ = minZV;
+	this->maxX = maxXV;
+	this->maxY = maxYV;
+	this->maxZ = maxZV;
 };
 
 void BVH::sortTriangles() {

@@ -1,6 +1,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -12,6 +13,7 @@
 #include "BCH.h"
 #include "BVH.h"
 
+#include <algorithm>
 #define WINDOW_HEIGHT 800
 #define WINDOW_WIDTH 1200
 
@@ -114,6 +116,45 @@ void CreateTriangleVector(std::vector<glm::vec3>& vertices, std::vector<glm::vec
 	
 }
 
+bool sortByAverageX(TriangleBVH l, TriangleBVH r) {
+	return (l.averageX < r.averageX);
+}
+
+bool sortByAverageY(TriangleBVH l, TriangleBVH r) {
+	return (l.averageY < r.averageY);
+}
+
+bool sortByAverageZ(TriangleBVH l, TriangleBVH r) {
+	return (l.averageZ < r.averageZ);
+}
+
+
+
+void buildTree(std::vector<TriangleBVH> triangleSort, int depth) {
+	//split vector
+	//sort
+
+	float x = 0;
+	switch (depth % 3) {
+	case 0:
+		std::sort(triangleSort.begin(), triangleSort.end(), sortByAverageX);
+		x = 1;
+		break;
+	case 1:
+		std::sort(triangleSort.begin(), triangleSort.end(), sortByAverageY);
+		break;
+	case 2:
+		std::sort(triangleSort.begin(), triangleSort.end(), sortByAverageZ);
+		break;
+	default:
+		break;
+	}
+
+	depth++;
+	//buildTree(triangleSort, depth);
+
+}
+
 BVH* createBVH() {
 	glm::vec3 ka = glm::vec3(0.1f, 0.1f, 0.1f);
 	glm::vec3 kd = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -122,11 +163,12 @@ BVH* createBVH() {
 	float n = 100.0f;
 
 
-	std::vector<int> triangleLoc;
-	for (int i = 0; i < triangleShapes.size(); i++) {
-		triangleLoc.push_back(i);
+	std::vector<TriangleBVH> triangleSort;
+	for (int i = 0; i < triangleShapes.size(); i++) { //create substititue vector
+		TriangleBVH recursiveObject = TriangleBVH(i, triangleShapes[i]->averageX(), triangleShapes[i]->averageY(), triangleShapes[i]->averageZ()); //location, x, y, z
+		triangleSort.push_back(recursiveObject);
 	}
-
+	buildTree(triangleSort, 0);
 	return new BVH(triangleShapes, ka, kd, ks, km, n);
 }
 
@@ -151,7 +193,7 @@ void Init()
 		std::cout << "Menu to choose scene. Press the corresponding number with the scene you want to see" << std::endl;
 		std::cout << "	1) scene with spheres and planes" << std::endl;
 		std::cout << "	2) scene with bunny BVH implementation" << std::endl;
-		std::cout << "	3) scene with bunny KD tree implementation" << std::endl;
+		std::cout << "	3) scene with bunny BVH tree implementation" << std::endl;
 
 		std::cin >> number;
 		num = atoi(number.c_str());

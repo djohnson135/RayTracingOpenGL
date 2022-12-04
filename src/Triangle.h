@@ -39,6 +39,11 @@ public:
 	Baycentric baycentricCoordinate(float xPos, float yPos, glm::vec3 A, glm::vec3 B, glm::vec3 C);
 	float intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1);
 	glm::vec3 getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection);
+	
+	float averageX();
+	float averageY();
+	float averageZ();
+
 	float minX();
 	float minY();
 	float minZ();
