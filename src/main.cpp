@@ -130,28 +130,51 @@ bool sortByAverageZ(TriangleBVH l, TriangleBVH r) {
 
 
 
-void buildTree(std::vector<TriangleBVH> triangleSort, int depth) {
+void buildTree(BVH* root, std::vector<TriangleBVH> triangleSort, int depth) {
 	//split vector
 	//sort
+	if (triangleSort.size() <= 3) {
+		return;
+	}
 
+	glm::vec3 ka = glm::vec3(0.1f, 0.1f, 0.1f);
+	glm::vec3 kd = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 ks = glm::vec3(1.0f, 1.0f, 0.5f);
+	glm::vec3 km = glm::vec3(0.0f, 0.0f, 0.0f);
+	float n = 100.0f;
+
+
+	std::vector<TriangleBVH> left;
+	std::vector<TriangleBVH> right;
+	int half_size = triangleSort.size() / 2;
 	float x = 0;
 	switch (depth % 3) {
 	case 0:
 		std::sort(triangleSort.begin(), triangleSort.end(), sortByAverageX);
-		x = 1;
+		left = std::vector<TriangleBVH>(triangleSort.begin(), triangleSort.begin() + half_size);
+		right = std::vector<TriangleBVH>(triangleSort.begin() + half_size, triangleSort.end());
 		break;
 	case 1:
 		std::sort(triangleSort.begin(), triangleSort.end(), sortByAverageY);
+		left = std::vector<TriangleBVH>(triangleSort.begin(), triangleSort.begin() + half_size);
+		right = std::vector<TriangleBVH>(triangleSort.begin() + half_size, triangleSort.end());
 		break;
 	case 2:
 		std::sort(triangleSort.begin(), triangleSort.end(), sortByAverageZ);
+		left = std::vector<TriangleBVH>(triangleSort.begin(), triangleSort.begin() + half_size);
+		right = std::vector<TriangleBVH>(triangleSort.begin() + half_size, triangleSort.end());
 		break;
 	default:
 		break;
 	}
+	BVH* leftBVH = new BVH(triangleShapes, left, ka, kd, ks, km, n);
+	BVH*  rightBVH= new BVH(triangleShapes,right, ka, kd, ks, km, n);
 
+	root->left = leftBVH;
+	root->right = rightBVH;
 	depth++;
-	//buildTree(triangleSort, depth);
+	buildTree(root->left, left, depth);
+	buildTree(root->right, right, depth);
 
 }
 
@@ -168,8 +191,10 @@ BVH* createBVH() {
 		TriangleBVH recursiveObject = TriangleBVH(i, triangleShapes[i]->averageX(), triangleShapes[i]->averageY(), triangleShapes[i]->averageZ()); //location, x, y, z
 		triangleSort.push_back(recursiveObject);
 	}
-	buildTree(triangleSort, 0);
-	return new BVH(triangleShapes, ka, kd, ks, km, n);
+	//buildTree(triangleSort, 0);
+	BVH* root = new BVH(triangleShapes, triangleSort, ka, kd, ks, km, n);
+	buildTree(root, triangleSort, 0);
+	return root;
 }
 
 void Init()

@@ -1,12 +1,19 @@
 #include "BVH.h"
 #include "Triangle.h"
 #include <iostream>
-BVH::BVH(std::vector<Triangle*> triangles, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, glm::vec3 km, float n) : Shape(ka, kd, ks, km, n)
+
+
+
+BVH::BVH(std::vector<Triangle*> triangles, std::vector<TriangleBVH> triangleLoc, glm::vec3 ka, glm::vec3 kd, glm::vec3 ks, glm::vec3 km, float n) : Shape(ka, kd, ks, km, n)
 
 {
-	
 	//this->intersectedTriangle = new Triangle();
-	computeBoundingBox(triangles);
+	this->trianglesInChildClass = triangles;
+	computeBoundingBox(triangles, triangleLoc);
+	this->triangleLoc = triangleLoc;
+	this->left = nullptr;
+	this->right = nullptr;
+	this->intersectedTriangle = triangles[0];
 }
 
 
@@ -37,18 +44,34 @@ float BVH::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 	else tmax = tzmax;
 
 	//check if intersects
-	if (tmin > tmax) return -1; //ray does not hit box
+	if (tmin > tmax) {//ray does not hit box
 
-	float smallestIntersect = FLT_MAX;
-	for (auto* triangle : this->triangles) {
-		float newt = triangle->intersect(origin, ray, t0, t1);
-		if (newt > t0 && newt < t1 && newt < smallestIntersect) {
-			smallestIntersect = newt;
-			this->intersectedTriangle = triangle;
-		}
+		return -1; 
 	}
-	return smallestIntersect;
+	
+	float smallestIntersect = FLT_MAX;
 
+	if (this->left == nullptr || this->right == nullptr) {
+		
+		for (auto triangle : this->triangleLoc) {
+			int index = triangle.location;
+			float newt = this->trianglesInChildClass[index]->intersect(origin, ray, t0, t1);
+			if (newt > t0 && newt < t1 && newt < smallestIntersect) {
+				smallestIntersect = newt;
+				this->intersectedTriangle = this->trianglesInChildClass[index];
+			}
+		}
+		return smallestIntersect;
+
+	}
+	else {
+
+		float leftTval = this->left->intersect(origin, ray, t0, t1);
+		float rightTval = this->right->intersect(origin, ray, t0, t1);
+		if (leftTval != -1) return leftTval;
+		else return rightTval;
+	}
+	return -1;
 }
 glm::vec3 BVH::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection) {
 
@@ -57,7 +80,7 @@ glm::vec3 BVH::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection
 }
 
 
-void BVH::computeBoundingBox(std::vector<Triangle*> triangles) {
+void BVH::computeBoundingBox(std::vector<Triangle*> triangles, std::vector<TriangleBVH> triangleLoc) {
 	float minXV = FLT_MAX;
 	float minYV = FLT_MAX;
 	float minZV = FLT_MAX;
@@ -65,16 +88,19 @@ void BVH::computeBoundingBox(std::vector<Triangle*> triangles) {
 	float maxXV = 0.0f;
 	float maxYV = 0.0f;
 	float maxZV = 0.0f;
-	for (auto* triangle : triangles) {
+	int iter = 0;
+	for (auto triangle : triangleLoc) {
 		//Triangle* t = triangle;
-		if (triangle->minX() < minXV) minXV = triangle->minX();
-		if (triangle->minY() < minYV) minYV = triangle->minY();
-		if (triangle->minZ() < minZV) minZV = triangle->minZ();
+		iter = triangle.location;
 
-		if (triangle->maxX() > maxXV) maxXV = triangle->maxX();
-		if (triangle->maxY() > maxYV) maxYV = triangle->maxY();
-		if (triangle->maxZ() > maxZV) maxZV = triangle->maxZ();
-		this->triangles.push_back(triangle);
+		if (triangles[iter]->minX() < minXV) minXV = triangles[iter]->minX();
+		if (triangles[iter]->minY() < minYV) minYV = triangles[iter]->minY();
+		if (triangles[iter]->minZ() < minZV) minZV = triangles[iter]->minZ();
+
+		if (triangles[iter]->maxX() > maxXV) maxXV = triangles[iter]->maxX();
+		if (triangles[iter]->maxY() > maxYV) maxYV = triangles[iter]->maxY();
+		if (triangles[iter]->maxZ() > maxZV) maxZV = triangles[iter]->maxZ();
+		this->triangles.push_back(triangles[iter]);
 	}
 	this->minX = minXV;
 	this->minY = minYV;
