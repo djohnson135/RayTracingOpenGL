@@ -69,12 +69,23 @@ float BVH::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 		float leftTval = this->left->intersect(origin, ray, t0, t1);
 		float rightTval = this->right->intersect(origin, ray, t0, t1);
 		if (leftTval > t0 && rightTval > t0) {
-			return std::min(leftTval, rightTval);
+			if (leftTval < rightTval) {
+				this->intersectedTriangle = this->left->intersectedTriangle;
+				return leftTval;
+			}
+			else {
+				this->intersectedTriangle = this->right->intersectedTriangle;
+				return rightTval;
+			}
+			
+			//return std::min(leftTval, rightTval);
 		}
-		else if (leftTval > t0) {
+		else if (leftTval > t0 && leftTval < t1) {
+			this->intersectedTriangle = this->left->intersectedTriangle;
 			return leftTval;
 		}
-		else if (rightTval > t0) {
+		else if (rightTval > t0 && leftTval < t1) {
+			this->intersectedTriangle = this->right->intersectedTriangle;
 			return rightTval;
 		}
 		else return -1;
