@@ -49,38 +49,9 @@ float BVH::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 		return -1; 
 	}
 	
-	
-
-	BVH* currNode = this;
-	//BVH* prevNode = nullptr;
-	while (currNode->left != nullptr && currNode->right != nullptr) {
-		/*float tLeft = currNode->left->intersect(origin, ray, t0, t1);*/
-
-		if (currNode->left->isIntersected(origin, ray, t0, t1)) {
-			//prevNode = currNode;
-			currNode = currNode->left;
-		}
-		else {
-			//prevNode = currNode;
-			currNode = currNode->right;
-		}
-
-	}
 
 	float smallestIntersect = FLT_MAX;
-
-	for (auto triangle : currNode->triangleLoc) {
-		int index = triangle.location;
-		float newt = currNode->trianglesInChildClass[index]->intersect(origin, ray, t0, t1);
-		if (newt > t0 && newt < t1 && newt < smallestIntersect) {
-			smallestIntersect = newt;
-			this->intersectedTriangle = currNode->trianglesInChildClass[index];
-		}
-	}
-	return smallestIntersect;
-
-
-	/*if (this->left == nullptr || this->right == nullptr) {
+	if (this->left == nullptr || this->right == nullptr) {
 		
 		for (auto triangle : this->triangleLoc) {
 			int index = triangle.location;
@@ -97,10 +68,18 @@ float BVH::intersect(glm::vec3 origin, glm::vec3 ray, float t0, float t1) {
 
 		float leftTval = this->left->intersect(origin, ray, t0, t1);
 		float rightTval = this->right->intersect(origin, ray, t0, t1);
-		if (leftTval != -1) return leftTval;
-		else return rightTval;
+		if (leftTval > t0 && rightTval > t0) {
+			return std::min(leftTval, rightTval);
+		}
+		else if (leftTval > t0) {
+			return leftTval;
+		}
+		else if (rightTval > t0) {
+			return rightTval;
+		}
+		else return -1;
 	}
-	return -1;*/
+	return -1;
 }
 glm::vec3 BVH::getNormal(glm::vec3 origin, glm::vec3 ray, glm::vec3 intersection) {
 
