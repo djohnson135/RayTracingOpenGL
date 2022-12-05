@@ -217,7 +217,7 @@ void Init()
 
 		std::cout << "Menu to choose scene. Press the corresponding number with the scene you want to see" << std::endl;
 		std::cout << "	1) scene with spheres and planes" << std::endl;
-		std::cout << "	2) scene with bunny BVH implementation" << std::endl;
+		std::cout << "	2) scene with bunny BVH part 1 implementation. No tree structure" << std::endl;
 		std::cout << "	3) scene with bunny BVH tree implementation" << std::endl;
 
 		std::cin >> number;
